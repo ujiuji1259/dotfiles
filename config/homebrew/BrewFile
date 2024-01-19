@@ -1,0 +1,7 @@
+tap "homebrew/cask-fonts"
+
+brew "rtx"
+brew "starship"
+brew "ghq"
+brew "fzf"
+brew "deno"
