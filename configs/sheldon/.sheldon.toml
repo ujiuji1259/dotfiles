@@ -1,0 +1,47 @@
+shell = "zsh"
+
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+apply = ["source"]
+
+[templates]
+defer = "{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}"
+
+[plugins.compinit]
+inline = 'autoload -Uz compinit && zsh-defer compinit'
+
+[plugins.zsh-syntax-highlighting]
+github = "zdharma/fast-syntax-highlighting"
+apply = ["defer"]
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+apply = ["defer"]
+
+[plugins.autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+apply = ["defer"]
+
+[plugins.starship]
+inline = 'eval "$(starship init zsh)"'
+
+[plugins.ghq-fzf]
+inline = '''
+function ghq-fzf() {
+  local dir=$(ghq list -p | fzf)
+
+  if [ -n "$dir" ]; then
+    BUFFER="cd ${dir}"
+    zle accept-line
+  fi
+
+  zle clear-screen
+}
+
+zle -N ghq-fzf
+'''
+
+[plugins.bindings]
+inline = '''
+bindkey '^f' ghq-fzf
+'''

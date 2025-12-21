@@ -1,0 +1,4 @@
+brew "sheldon"
+brew "starship"
+brew "ghq"
+brew "fzf"
