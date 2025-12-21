@@ -1,4 +1,7 @@
+brew "tmux"
+brew "neovim"
 brew "sheldon"
 brew "starship"
 brew "ghq"
 brew "fzf"
+brew "ripgrep"

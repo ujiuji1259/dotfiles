@@ -25,6 +25,16 @@ apply = ["defer"]
 [plugins.starship]
 inline = 'eval "$(starship init zsh)"'
 
+[plugins.history-fzf]
+inline = '''
+function fzf-select-history() {
+    BUFFER=$(history -n -r 1 | fzf --query "$LBUFFER" --reverse)
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+zle -N fzf-select-history
+'''
+
 [plugins.ghq-fzf]
 inline = '''
 function ghq-fzf() {
@@ -44,4 +54,5 @@ zle -N ghq-fzf
 [plugins.bindings]
 inline = '''
 bindkey '^f' ghq-fzf
+bindkey '^r' fzf-select-history
 '''
