@@ -5,3 +5,7 @@ eval "$(sheldon source)"
 
 # for starship
 export STARSHIP_CONFIG="$ZDOTDIR/configs/starship/starship.toml"
+
+# for mise
+eval "$(mise activate zsh)"
+

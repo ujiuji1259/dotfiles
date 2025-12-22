@@ -14,3 +14,7 @@ opt.smartcase = true
 
 -- クリップボードの設定
 opt.clipboard = "unnamedplus"
+
+-- cmdlineを非表示
+-- opt.cmdheight = 0
+
