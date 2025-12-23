@@ -37,22 +37,48 @@ zle -N fzf-select-history
 
 [plugins.ghq-fzf]
 inline = '''
-function ghq-fzf() {
-  local dir=$(ghq list -p | fzf)
+#!/usr/bin/env bash
+#
 
-  if [ -n "$dir" ]; then
-    BUFFER="cd ${dir}"
-    zle accept-line
-  fi
+set -euo pipefail
 
-  zle clear-screen
+changeSession() {
+  local change
+  [[ -n "${TMUX:-""}" ]] && change="switch-client" || change="attach-session"
+  tmux $change -t "$1"
 }
 
-zle -N ghq-fzf
+createSessionIfNeeded() {
+  local name=$1
+  [[ -n "$2" ]] && dir=$2 || dir=$(pwd)
+  tmux list-sessions -F "#{session_name}" |
+    grep -q -E "^${name}$" ||
+    tmux new-session -d -c "${dir}" -s "${name}"
+}
+
+selectRepo() {
+  echo "$(ghq root)/$(ghq list | fzf)"
+}
+
+tm() {
+  if [ $# -eq 1 ]; then
+    createSessionIfNeeded $1
+    changeSession $1
+    exit
+  fi
+
+  local repo="$(selectRepo)"
+  local session="$(echo "$repo" | awk -F/ '{ print $NF }')"
+
+  createSessionIfNeeded $session $repo
+  changeSession $session
+}
+
+zle -N tm
 '''
 
 [plugins.bindings]
 inline = '''
-bindkey '^f' ghq-fzf
+bindkey '^f' tm
 bindkey '^r' fzf-select-history
 '''
