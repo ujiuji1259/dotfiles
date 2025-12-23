@@ -1,4 +1,5 @@
 continuation_prompt = '[❯❯ ](fg:blue)'
+right_format = """$gcloud"""
 
 [directory]
 style = "fg:blue"
@@ -14,7 +15,11 @@ error_symbol = '[❯❯❯](fg:red)'
 
 [git_status]
 style = "fg:blue"
-format = '([\[$all_status$ahead_behind\]]($style))'
+format = ' ([\[$all_status$ahead_behind\]]($style))'
+conflicted = "⚔️ "
+untracked = "🆕" # ? を 🆕 に変更
+modified = "📝"  # ! を 📝 に変更
+stashed = "📦"   # $ を 📦 に変更
 
 
 [git_branch]
@@ -26,28 +31,18 @@ symbol = ""
 [git_metrics]
 disabled = false
 added_style = 'bold blue'
-format = '\([+$added]($added_style)/[-$deleted]($deleted_style)\)'
+format = ' \([+$added]($added_style)/[-$deleted]($deleted_style)\)'
 only_nonzero_diffs = true
-
 
 [package]
 disabled = true
 
-
-[nodejs]
-style = "#ffc0cb"
-format = " [$symbol $version]($style)"
-symbol = ''
-
-
-[python]
-detect_extensions = ['py', 'ipynb']
-pyenv_version_name = true
-style = "yellow"
-format = ' [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-
-
 [cmd_duration]
 show_milliseconds = true
 format = ' [󱫌 $duration]($style)'
-#min_time = 10
+
+[gcloud]
+symbol = '󱇶 '
+style  = 'fg:#F7F7F7 bg:#7E8EF1'
+format = '[](fg:#7E8EF1)[$symbol$project]($style)[▓▒](#7E8EF1)'
+

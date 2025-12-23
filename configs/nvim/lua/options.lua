@@ -19,4 +19,7 @@ opt.clipboard = "unnamedplus"
 opt.laststatus = 0
 opt.statusline = "─"
 opt.fillchars:append({ stl = "─", stlnc = "─" })
+--
+-- hide cmdline
+vim.opt.cmdheight = 0
 

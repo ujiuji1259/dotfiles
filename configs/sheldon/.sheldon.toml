@@ -37,11 +37,6 @@ zle -N fzf-select-history
 
 [plugins.ghq-fzf]
 inline = '''
-#!/usr/bin/env bash
-#
-
-set -euo pipefail
-
 changeSession() {
   local change
   [[ -n "${TMUX:-""}" ]] && change="switch-client" || change="attach-session"

@@ -2,7 +2,6 @@
 
 ln -snfv "$(pwd)/.zshrc" "$HOME/.zshrc"
 ln -snfv "$(pwd)/configs/sheldon/.sheldon.toml" "$HOME/.sheldon.toml"
-ln -snfv "$(pwd)/configs/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
 if [ ! -d "$HOME/.config" ]; then
     mkdir -p "$HOME/.config"
@@ -10,5 +9,6 @@ fi
 ln -snfv "$(pwd)/configs/nvim" "$HOME/.config"
 ln -snfv "$(pwd)/configs/wezterm" "$HOME/.config"
 ln -snfv "$(pwd)/configs/starship/starship.toml" "$HOME/.config"
+ln -snfv "$(pwd)/configs/tmux" "$HOME/.config"
 
 echo "Success"
