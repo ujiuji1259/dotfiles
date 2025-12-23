@@ -1,7 +1,10 @@
 return {
   "folke/snacks.nvim",
   opts = {
-    picker = {},
+    picker = {
+        hidden = true,
+        ignored = true,
+    },
     explorer = {},
   },
   keys = {
