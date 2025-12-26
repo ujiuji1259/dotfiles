@@ -4,6 +4,13 @@ return {
     picker = {
         hidden = true,
         ignored = true,
+        ignore_patterns = {
+          "**/.venv/**",
+          ".venv/**",
+          ".mypy_cache/**",
+          "*.pyc",
+          "__pycache__/**",
+        },
     },
     explorer = {},
   },
@@ -43,7 +50,6 @@ return {
     -- search
     { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
     { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
-    { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
     { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
     { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
     { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands" },

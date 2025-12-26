@@ -5,4 +5,5 @@ return {
   color_scheme = "iceberg-dark",
   window_background_opacity = 0.9,
   enable_tab_bar = false,
+  enable_kitty_graphics = true,
 }
