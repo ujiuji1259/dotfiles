@@ -10,5 +10,6 @@ ln -snfv "$(pwd)/configs/nvim" "$HOME/.config"
 ln -snfv "$(pwd)/configs/wezterm" "$HOME/.config"
 ln -snfv "$(pwd)/configs/starship/starship.toml" "$HOME/.config"
 ln -snfv "$(pwd)/configs/tmux" "$HOME/.config"
+ln -snfv "$(pwd)/configs/zsh-abbr" "$HOME/.config"
 
 echo "Success"

@@ -1,0 +1,6 @@
+abbr "g"="git"
+abbr "kc"="kubectl"
+abbr "lv"="lazygit"
+abbr "v"="nvim"
+abbr "vi"="nvim"
+abbr "vim"="nvim"

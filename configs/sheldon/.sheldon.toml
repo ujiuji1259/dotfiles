@@ -25,14 +25,6 @@ apply = ["defer"]
 [plugins.zsh-abbr]
 github = "olets/zsh-abbr"
 apply = ["defer"]
-hooks.post = '''
-abbr --force v='nvim'
-abbr --force vi='nvim'
-abbr --force vim='nvim'
-abbr --force g='git'
-abbr --force lv='lazygit'
-abbr --force kc='kubectl'
-'''
 
 [plugins.starship]
 inline = 'eval "$(starship init zsh)"'
