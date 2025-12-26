@@ -2,7 +2,20 @@ return {
   "folke/noice.nvim",
   event = "VeryLazy",
   opts = {
-    -- add any options here
+    routes = {
+      {
+        filter = {
+          event = "msg_show",
+          any = {
+            { find = "%[ale%]" },
+            { find = "ALE:" },
+            { find = "^E%d+:" },
+            { find = "^W%d+:" },
+          },
+        },
+        opts = { skip = true },
+      },
+    },
   },
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
