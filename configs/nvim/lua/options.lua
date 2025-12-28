@@ -16,9 +16,9 @@ opt.smartcase = true
 opt.clipboard = "unnamedplus"
 
 -- clear statusline
-opt.laststatus = 0
-opt.statusline = "─"
-opt.fillchars:append({ stl = "─", stlnc = "─" })
+-- opt.laststatus = 0
+-- opt.statusline = "─"
+-- opt.fillchars:append({ stl = "─", stlnc = "─" })
 --
 -- hide cmdline
 vim.opt.cmdheight = 0
