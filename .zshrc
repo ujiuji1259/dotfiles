@@ -13,6 +13,7 @@ path=(
 
 path=(
     "$HOME/.local/bin"(N-/)
+    "$HOME/.deno/bin"(N-/)
     "$path[@]"
 )
 
