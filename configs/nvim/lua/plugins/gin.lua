@@ -2,6 +2,7 @@ return {
     'lambdalisue/vim-gin',
     dependencies = {
         'vim-denops/denops.vim',
+        { 'nvim-telescope/telescope.nvim', tag = 'v0.2.0', dependencies = { 'nvim-lua/plenary.nvim' } },
     },
     keys = {
         { '<C-g>s', '<Cmd>GinStatus<Cr>', desc = 'Git Status (Gin)' },
@@ -22,8 +23,8 @@ return {
                 keymap({ 'n' }, 'B', '<Cmd>GinBranch<Cr>', opts)
                 keymap({ 'n' }, 'd', '<Cmd>GinDiff --cached<Cr>', opts)
                 keymap({ 'n' }, 'q', '<Cmd>bdelete<Cr>', opts)
-                keymap({ 'n' }, 'P', [[<Cmd>lua vim.notify("Gin push")<Cr><Cmd>Gin push<Cr>]], opts)
-                keymap({ 'n' }, 'p', [[<Cmd>lua vim.notify("Gin pull")<Cr><Cmd>Gin pull<Cr>]], opts)
+                keymap({ 'n' }, 'P', [[<Cmd>lua vim.notify("Gin push")<Cr><Cmd>GinPush<Cr>]], opts)
+                keymap({ 'n' }, 'p', [[<Cmd>lua vim.notify("Gin pull")<Cr><Cmd>GinPull<Cr>]], opts)
               end,
           }
         )
@@ -66,5 +67,15 @@ return {
                 end,
             }
         )
+
+        vim.api.nvim_create_autocmd("BufReadCmd", {
+          group = vim.api.nvim_create_augroup("gin-custom", {}),
+          pattern = "ginlog://*" ,
+          callback = function(ctx)
+            vim.keymap.set("n", "a", function()
+              require("telescope.builtin").keymaps({ default_text = "gin-action " })
+            end, { buffer = ctx.buf })
+          end,
+        })
     end,
 }
