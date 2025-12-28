@@ -23,8 +23,8 @@ return {
                 keymap({ 'n' }, 'B', '<Cmd>GinBranch<Cr>', opts)
                 keymap({ 'n' }, 'd', '<Cmd>GinDiff --cached<Cr>', opts)
                 keymap({ 'n' }, 'q', '<Cmd>bdelete<Cr>', opts)
-                keymap({ 'n' }, 'P', [[<Cmd>lua vim.notify("Gin push")<Cr><Cmd>GinPush<Cr>]], opts)
-                keymap({ 'n' }, 'p', [[<Cmd>lua vim.notify("Gin pull")<Cr><Cmd>GinPull<Cr>]], opts)
+                keymap({ 'n' }, 'P', [[<Cmd>lua vim.notify("Gin push")<Cr><Cmd>Gin push origin HEAD<Cr>]], opts)
+                keymap({ 'n' }, 'p', [[<Cmd>lua vim.notify("Gin pull")<Cr><Cmd>Gin pull<Cr>]], opts)
               end,
           }
         )
