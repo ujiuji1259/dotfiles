@@ -23,3 +23,5 @@ opt.fillchars:append({ stl = "─", stlnc = "─" })
 -- hide cmdline
 vim.opt.cmdheight = 0
 
+vim.opt.signcolumn = 'yes'
+
