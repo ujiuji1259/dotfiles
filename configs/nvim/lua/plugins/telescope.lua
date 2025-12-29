@@ -12,7 +12,6 @@ return {
       end,
     },
     -- Additional useful extensions
-    "nvim-telescope/telescope-file-browser.nvim",
     "nvim-telescope/telescope-project.nvim",
     "nvim-telescope/telescope-github.nvim",
     "debugloop/telescope-undo.nvim",
@@ -55,10 +54,6 @@ return {
           override_file_sorter = true,
           case_mode = "smart_case",
         },
-        file_browser = {
-          theme = "ivy",
-          hijack_netrw = true,
-        },
         undo = {
           use_delta = true,
           side_by_side = true,
@@ -72,7 +67,6 @@ return {
 
     -- Load extensions
     telescope.load_extension("fzf")
-    telescope.load_extension("file_browser")
     telescope.load_extension("project")
     telescope.load_extension("gh")
     telescope.load_extension("undo")
@@ -121,7 +115,6 @@ return {
     { "<leader>/", function() require("telescope.builtin").live_grep() end, desc = "Grep" },
     { "<leader>:", function() require("telescope.builtin").command_history() end, desc = "Command History" },
     { "<leader>n", function() require("telescope.builtin").notify() end, desc = "Notification History" },
-    { "<leader>e", function() require("telescope").extensions.file_browser.file_browser() end, desc = "File Explorer" },
 
     -- Find
     { "<leader>fb", function() require("telescope.builtin").buffers() end, desc = "Buffers" },

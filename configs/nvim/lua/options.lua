@@ -25,3 +25,7 @@ vim.opt.cmdheight = 0
 
 vim.opt.signcolumn = 'yes'
 
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
