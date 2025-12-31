@@ -25,6 +25,9 @@ return {
       defaults = {
         -- Configure hidden and ignored files similar to snacks picker
         hidden = true,
+        preview = {
+          treesitter = false,
+        },
         file_ignore_patterns = {
           "**/.venv/**",
           ".venv/**",
