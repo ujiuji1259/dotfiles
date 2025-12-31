@@ -67,10 +67,91 @@ tm() {
   fi
 
   local repo="$(selectRepo)"
-  local session="$(echo "$repo" | awk -F/ '{ print $NF }')"
+  local repo_name="$(echo "$repo" | awk -F/ '{ print $NF }')"
 
-  createSessionIfNeeded $session $repo
-  changeSession $session
+  # リポジトリ名に+が含まれている場合は、ブランチ選択をスキップ
+  if [[ "$repo_name" == *"+"* ]]; then
+    createSessionIfNeeded "$repo_name" "$repo"
+    changeSession "$repo_name"
+    return
+  fi
+
+  # ブランチを選択または新規作成
+  local selected=$(
+    (echo "[+ Create new branch]"; git -C "$repo" branch -a | \
+      sed 's/^[*+ ]*//' | \
+      sed 's/remotes\/origin\///' | \
+      grep -v 'HEAD ->' | \
+      sort -u) | \
+    fzf --prompt="Select branch: " \
+        --print-query \
+        --height=50%)
+
+  local query=$(echo "$selected" | sed -n '1p')
+  local selection=$(echo "$selected" | sed -n '2p')
+
+  # "[+ Create new branch]" が選択された場合は新規ブランチ作成
+  if [ "$selection" = "[+ Create new branch]" ]; then
+    echo -n "Enter new branch name: "
+    read branch
+  elif [ -z "$selection" ]; then
+    local branch="$query"
+  else
+    local branch="$selection"
+  fi
+
+  branch=$(echo "$branch" | xargs)
+
+  # ブランチが空の場合は終了
+  if [ -z "$branch" ]; then
+    echo "No branch selected"
+    return 1
+  fi
+
+  # main or master ブランチの場合は元のリポジトリで作業
+  if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+    createSessionIfNeeded "$repo_name" "$repo"
+    changeSession "$repo_name"
+    return
+  fi
+
+  # 既存のworktreeかチェック
+  local existing_worktree=$(git -C "$repo" worktree list | grep "\[$branch\]" | awk '{print $1}')
+
+  if [ -n "$existing_worktree" ]; then
+    # 既存のworktreeを使用
+    local session="${repo_name}+${branch}"
+    createSessionIfNeeded "$session" "$existing_worktree"
+    changeSession "$session"
+    return
+  fi
+
+  # worktree用のディレクトリとセッション名
+  local session="${repo_name}+${branch}"
+  local worktree_dir="$(ghq root)/${session}"
+
+  # worktreeが既に存在するか確認
+  if [ -d "$worktree_dir" ]; then
+    # 既存のworktreeを使用
+    createSessionIfNeeded "$session" "$worktree_dir"
+    changeSession "$session"
+    return
+  fi
+
+  # ブランチが存在するか確認
+  if git -C "$repo" show-ref --verify --quiet "refs/heads/$branch"; then
+    # ローカルブランチが存在する場合
+    git -C "$repo" worktree add "$worktree_dir" "$branch"
+  elif git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+    # リモートブランチが存在する場合
+    git -C "$repo" worktree add "$worktree_dir" "$branch"
+  else
+    # 新規ブランチを作成
+    git -C "$repo" worktree add -b "$branch" "$worktree_dir"
+  fi
+
+  createSessionIfNeeded "$session" "$worktree_dir"
+  changeSession "$session"
 }
 
 zle -N tm
@@ -79,4 +160,21 @@ zle -N tm
 [plugins.bindings]
 inline = '''
 bindkey '^r' fzf-select-history
+'''
+
+[plugins.worktree-remove]
+inline = '''
+tw-rm() {
+  local worktree_list="for repo in \$(ghq list --full-path | grep -v '+'); do [ -d \"\$repo\" ] && git -C \"\$repo\" worktree list 2>/dev/null | tail -n +2 | awk -v repo=\"\$repo\" '{print \$1, repo}'; done | sort -u"
+
+  eval "$worktree_list" | fzf \
+    --prompt="Select worktree (Ctrl-D: delete, Enter: quit): " \
+    --header="Press Ctrl-D to delete selected worktree" \
+    --bind "ctrl-d:execute(
+      git -C {2} worktree remove {1} && \
+      echo 'Deleted: {1}' || echo 'Failed to delete: {1}'
+    )+reload($worktree_list)"
+}
+
+zle -N tw-rm
 '''
