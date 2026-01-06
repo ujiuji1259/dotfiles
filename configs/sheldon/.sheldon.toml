@@ -126,6 +126,12 @@ tm() {
     return
   fi
 
+  # 最新の状態を取得
+  echo "Fetching latest changes from remote..."
+  git -C "$repo" fetch --quiet || {
+    echo "Warning: Failed to fetch latest changes, proceeding with local state"
+  }
+
   # worktree用のディレクトリとセッション名
   local session="${repo_name}+${branch}"
   local worktree_dir="$(ghq root)/${session}"
@@ -141,13 +147,41 @@ tm() {
   # ブランチが存在するか確認
   if git -C "$repo" show-ref --verify --quiet "refs/heads/$branch"; then
     # ローカルブランチが存在する場合
-    git -C "$repo" worktree add "$worktree_dir" "$branch"
+    if ! git -C "$repo" worktree add "$worktree_dir" "$branch" 2>/dev/null; then
+      echo "Error: Failed to create worktree for local branch '$branch'"
+      echo "Possible causes:"
+      echo "  - Worktree directory already exists: $worktree_dir"
+      echo "  - Branch '$branch' is already checked out in another worktree"
+      echo "Manual workaround:"
+      echo "  git -C '$repo' worktree add '$worktree_dir' '$branch'"
+      return 1
+    fi
   elif git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
     # リモートブランチが存在する場合
-    git -C "$repo" worktree add "$worktree_dir" "$branch"
+    if ! git -C "$repo" worktree add "$worktree_dir" "$branch" 2>/dev/null; then
+      echo "Error: Failed to create worktree for remote branch '$branch'"
+      echo "Possible causes:"
+      echo "  - Local branch '$branch' conflicts with remote tracking"
+      echo "  - Worktree directory already exists: $worktree_dir"
+      echo "Manual workaround:"
+      echo "  git -C '$repo' worktree add '$worktree_dir' '$branch'"
+      return 1
+    fi
   else
-    # 新規ブランチを作成
-    git -C "$repo" worktree add -b "$branch" "$worktree_dir"
+    # 新規ブランチを作成（origin/mainベース）
+    if ! git -C "$repo" worktree add -b "$branch" "$worktree_dir" "origin/main" 2>/dev/null; then
+      echo "Error: Failed to create new worktree with branch '$branch' from origin/main"
+      echo "Possible causes:"
+      echo "  - origin/main does not exist (repository might use origin/master)"
+      echo "  - Branch name '$branch' already exists"
+      echo "  - Permission issues with directory: $worktree_dir"
+      echo "Manual workarounds:"
+      echo "  # If using master branch:"
+      echo "  git -C '$repo' worktree add -b '$branch' '$worktree_dir' 'origin/master'"
+      echo "  # Check existing branches:"
+      echo "  git -C '$repo' branch -a"
+      return 1
+    fi
   fi
 
   createSessionIfNeeded "$session" "$worktree_dir"
