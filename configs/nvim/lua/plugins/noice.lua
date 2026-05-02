@@ -23,7 +23,7 @@ return {
         -- OPTIONAL:
         --   `nvim-notify` is only needed, if you want to use the notification view.
         --   If not available, we use `mini` as the fallback
-        { "rcarriga/nvim-notify", opts = { timeout = 1000 } },
+        { "rcarriga/nvim-notify" }
     },
     lsp = {
         -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
