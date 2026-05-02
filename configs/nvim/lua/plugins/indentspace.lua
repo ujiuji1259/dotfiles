@@ -1,6 +1,5 @@
-return { 
-    'nvim-mini/mini.indentscope',
-    version = '*',
+return {
+    "nvim-mini/mini.indentscope",
+    version = "*",
     opts = {},
 }
-

@@ -18,9 +18,9 @@ return {
                         pylint = { enabled = false },
                         mccabe = { enabled = false },
                         pyflakes = { enabled = false },
-                    }
-                }
-            }
+                    },
+                },
+            },
         }
     end,
 }

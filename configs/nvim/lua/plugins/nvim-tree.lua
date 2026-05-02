@@ -1,7 +1,7 @@
 return {
-    'nvim-tree/nvim-tree.lua',
+    "nvim-tree/nvim-tree.lua",
     dependencies = {
-        'nvim-tree/nvim-web-devicons',
+        "nvim-tree/nvim-web-devicons",
     },
     keys = {
         -- Ctrl + n でツリーを開閉する例
@@ -9,16 +9,16 @@ return {
     },
     opts = {
         sort = {
-          sorter = "case_sensitive",
+            sorter = "case_sensitive",
         },
         view = {
-          width = 30,
+            width = 30,
         },
         renderer = {
-          group_empty = true,
+            group_empty = true,
         },
         filters = {
-          dotfiles = true,
+            dotfiles = true,
         },
     },
 }

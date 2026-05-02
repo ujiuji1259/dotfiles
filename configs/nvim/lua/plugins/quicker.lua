@@ -1,41 +1,40 @@
 return {
-  'stevearc/quicker.nvim',
-  ft = "qf",
-  ---@module "quicker"
-  ---@type quicker.SetupOptions
-  opts = {
+    "stevearc/quicker.nvim",
+    ft = "qf",
+    ---@module "quicker"
+    ---@type quicker.SetupOptions
+    opts = {
+        keys = {
+            {
+                ">",
+                function()
+                    require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
+                end,
+                desc = "Expand quickfix context",
+            },
+            {
+                "<",
+                function()
+                    require("quicker").collapse()
+                end,
+                desc = "Collapse quickfix context",
+            },
+        },
+    },
     keys = {
-      {
-        ">",
-        function()
-          require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
-        end,
-        desc = "Expand quickfix context",
-      },
-      {
-        "<",
-        function()
-          require("quicker").collapse()
-        end,
-        desc = "Collapse quickfix context",
-      },
-
-    }
-  },
-  keys = {
-      {
-        "<leader>q",
-        function()
-          require("quicker").open()
-        end,
-        desc = "Open Quicker",
-      },
-      {
-          "<leader>l",
-        function()
-            require("quicker").toggle({ loclist = true })
-        end,
-        desc = "Open Last Quicker",
-      },
-  },
+        {
+            "<leader>q",
+            function()
+                require("quicker").open()
+            end,
+            desc = "Open Quicker",
+        },
+        {
+            "<leader>l",
+            function()
+                require("quicker").toggle({ loclist = true })
+            end,
+            desc = "Open Last Quicker",
+        },
+    },
 }
