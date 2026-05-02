@@ -174,7 +174,7 @@ return {
     { "gD", function() require("telescope.builtin").lsp_declarations() end, desc = "Goto Declaration" },
     { "gr", function() require("telescope.builtin").lsp_references() end, nowait = true, desc = "References" },
     { "gI", function() require("telescope.builtin").lsp_implementations() end, desc = "Goto Implementation" },
-    { "gy", function() require("telescope.builtin").lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+    { "gt", function() require("telescope.builtin").lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
     { "gai", function() require("telescope.builtin").lsp_incoming_calls() end, desc = "C[a]lls Incoming" },
     { "gao", function() require("telescope.builtin").lsp_outgoing_calls() end, desc = "C[a]lls Outgoing" },
     { "<leader>ss", function() require("telescope.builtin").lsp_document_symbols() end, desc = "LSP Symbols" },
