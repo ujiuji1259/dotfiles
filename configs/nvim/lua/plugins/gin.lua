@@ -68,14 +68,25 @@ return {
             }
         )
 
-        vim.api.nvim_create_autocmd("BufReadCmd", {
-          group = vim.api.nvim_create_augroup("gin-custom", {}),
-          pattern = "ginlog://*" ,
-          callback = function(ctx)
+        -- オリジナルの設定をここに記述
+        local gin_telescope_action = function(ctx)
             vim.keymap.set("n", "a", function()
-              require("telescope.builtin").keymaps({ default_text = "gin-action " })
-            end, { buffer = ctx.buf })
-          end,
+                require("telescope.builtin").keymaps({
+                    default_text = "gin-action ",
+                })
+            end, { buffer = ctx.buf, desc = "Gin Action with Telescope" })
+        end
+
+        local augroup = vim.api.nvim_create_augroup("gin-custom", {})
+        vim.api.nvim_create_autocmd("BufReadCmd", {
+            group = augroup,
+            pattern = "ginlog://*",
+            callback = gin_telescope_action,
+        })
+        vim.api.nvim_create_autocmd("BufReadCmd", {
+            group = augroup,
+            pattern = "ginstatus://*",
+            callback = gin_telescope_action,
         })
     end,
 }
