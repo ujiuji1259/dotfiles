@@ -41,23 +41,20 @@ zle -N fzf-select-history
 
 [plugins.ghq]
 inline = '''
-repo() {
+repo-select() {
   local root="$(ghq root)"
+  {
+    ghq list | sed "s|^|$root/|"
+    find "$root" -path "*/.claude/worktrees/*" -maxdepth 6 -mindepth 4 -type d 2>/dev/null
+  } | fzf
+}
+repo() {
   local dir
-  dir=$(
-    {
-      ghq list | sed "s|^|$root/|"
-      find "$root" -path "*/.claude/worktrees/*" -maxdepth 6 -mindepth 4 -type d 2>/dev/null
-    } | fzf
-  )
+  dir=$(repo-select) || return
   [ -z "$dir" ] && return
-
   if command -v tmux >/dev/null 2>&1; then
-    local session
-    session="$(basename "$dir" | tr '.' '_')"
-    if ! tmux has-session -t="$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$dir"
-    fi
+    local session="$(basename "$dir" | tr '.' '_')"
+    tmux has-session -t="$session" 2>/dev/null || tmux new-session -d -s "$session" -c "$dir"
     if [ -n "$TMUX" ]; then
       tmux switch-client -t="$session"
     else
@@ -68,8 +65,27 @@ repo() {
   fi
 }
 repo-widget() {
-  repo < /dev/tty
-  zle reset-prompt
+  local dir
+  dir=$(repo-select < /dev/tty)
+  if [ -z "$dir" ]; then
+    zle reset-prompt
+    return
+  fi
+  if command -v tmux >/dev/null 2>&1; then
+    local session="$(basename "$dir" | tr '.' '_')"
+    if [ -n "$TMUX" ]; then
+      tmux has-session -t="$session" 2>/dev/null || tmux new-session -d -s "$session" -c "$dir"
+      tmux switch-client -t="$session"
+      zle reset-prompt
+    else
+      # widget 内から tmux attach は tty を奪えないので、BUFFER 経由でプロンプトに渡して実行する
+      BUFFER="tmux has-session -t=\"$session\" 2>/dev/null || tmux new-session -d -s \"$session\" -c \"$dir\"; tmux attach-session -t=\"$session\""
+      zle accept-line
+    fi
+  else
+    BUFFER="cd \"$dir\""
+    zle accept-line
+  fi
 }
 zle -N repo-widget
 '''
