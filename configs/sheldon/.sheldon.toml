@@ -50,7 +50,22 @@ repo() {
       find "$root" -path "*/.claude/worktrees/*" -maxdepth 6 -mindepth 4 -type d 2>/dev/null
     } | fzf
   )
-  [ -n "$dir" ] && cd "$dir"
+  [ -z "$dir" ] && return
+
+  if command -v tmux >/dev/null 2>&1; then
+    local session
+    session="$(basename "$dir" | tr '.' '_')"
+    if ! tmux has-session -t="$session" 2>/dev/null; then
+      tmux new-session -d -s "$session" -c "$dir"
+    fi
+    if [ -n "$TMUX" ]; then
+      tmux switch-client -t="$session"
+    else
+      tmux attach-session -t="$session"
+    fi
+  else
+    cd "$dir"
+  fi
 }
 repo-widget() {
   repo < /dev/tty
