@@ -52,11 +52,15 @@ repo() {
   )
   [ -n "$dir" ] && cd "$dir"
 }
-zle -N repo
+repo-widget() {
+  repo < /dev/tty
+  zle reset-prompt
+}
+zle -N repo-widget
 '''
 
 [plugins.bindings]
 inline = '''
 bindkey '^r' fzf-select-history
-bindkey '^f' repo
+bindkey '^f' repo-widget
 '''
