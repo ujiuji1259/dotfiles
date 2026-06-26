@@ -58,5 +58,5 @@ zle -N repo
 [plugins.bindings]
 inline = '''
 bindkey '^r' fzf-select-history
-bindkey '^xf' repo
+bindkey '^f' repo
 '''
