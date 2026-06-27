@@ -45,8 +45,13 @@ repo-select() {
   local root="$(ghq root)"
   {
     ghq list | sed "s|^|$root/|"
-    find "$root" -path "*/.claude/worktrees/*" -maxdepth 6 -mindepth 4 -type d 2>/dev/null
-  } | fzf
+    # 各リポジトリの .git/worktrees に登録されている worktree (claude の worktree も
+    # git worktree add で作った標準のものもまとめて拾う。ghq ツリー外に置いた worktree も含む)
+    ghq list -p | while IFS= read -r repo; do
+      [ -d "$repo/.git/worktrees" ] || continue
+      git -C "$repo" worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p'
+    done
+  } | awk '!seen[$0]++' | fzf
 }
 repo() {
   local dir
