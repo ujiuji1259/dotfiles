@@ -13,7 +13,6 @@ path=(
 
 path=(
     "$HOME/.local/bin"(N-/)
-    "$HOME/.deno/bin"(N-/)
     "$path[@]"
 )
 
@@ -21,6 +20,6 @@ path=(
 export SHELDON_CONFIG_FILE=$HOME/.sheldon.toml
 eval "$(sheldon source)"
 
-# for mise
-eval "$(mise activate zsh)"
+# for direnv (nix-direnv 経由でプロジェクトごとの nix shell を自動読み込み)
+eval "$(direnv hook zsh)"
 
